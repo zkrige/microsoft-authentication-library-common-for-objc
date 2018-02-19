@@ -21,24 +21,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "MSIDBaseToken.h"
+#import "MSIDRefreshToken.h"
 
-@interface MSIDRefreshToken : MSIDBaseToken <NSCopying>
-{
-    NSString *_refreshToken;
-    NSString *_familyId;
-    NSString *_idToken;
-    NSString *_username;
-    
-    NSString *_resource;
-}
+@interface MSIDADFSUserToken : MSIDRefreshToken
 
-@property (readonly) NSString *refreshToken;
-@property (readonly) NSString *familyId;
-@property (readonly) NSString *idToken;
-@property (readonly) NSString *username;
-
-/* Resource specific refresh tokens applicable for AAD V1 */
-@property (readonly) NSString *resource;
+@property (readonly) NSDate *expiresOn;
+@property (readonly) NSDate *cachedAt;
+@property (readonly) NSString *accessToken;
 
 @end

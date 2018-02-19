@@ -53,6 +53,7 @@
 @property (readonly) NSDictionary *additionalInfo;
 
 - (BOOL)isEqualToToken:(MSIDBaseToken *)token;
+- (BOOL)isExpired;
 
 - (instancetype)initWithTokenResponse:(MSIDTokenResponse *)response
                               request:(MSIDRequestParameters *)requestParams;

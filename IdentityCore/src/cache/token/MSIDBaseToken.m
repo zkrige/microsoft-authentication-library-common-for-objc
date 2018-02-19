@@ -284,4 +284,11 @@
     }
 }
 
+#pragma mark - Convinience
+
+- (BOOL)isExpired
+{
+    return NO;
+}
+
 @end

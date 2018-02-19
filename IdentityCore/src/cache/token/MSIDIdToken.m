@@ -117,6 +117,8 @@
     /* Mandatory fields */
     [dictionary setValue:_rawIdToken forKey:MSID_TOKEN_CACHE_KEY];
     
+    // TODO: id token should be per tenant
+    
     return dictionary;
 }
 

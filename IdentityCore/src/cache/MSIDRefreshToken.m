@@ -24,6 +24,8 @@
 #import "MSIDRefreshToken.h"
 #import "MSIDAADTokenResponse.h"
 #import "MSIDUserInformation.h"
+#import "MSIDAADV1RequestParameters.h"
+#import "MSIDAADV1TokenResponse.h"
 
 @implementation MSIDRefreshToken
 
@@ -52,6 +54,7 @@
     _refreshToken = [coder decodeObjectOfClass:[NSString class] forKey:@"refreshToken"];
     _familyId = [coder decodeObjectOfClass:[NSString class] forKey:@"familyId"];
     _username = [coder decodeObjectOfClass:[NSString class] forKey:@"username"];
+    _resource = [coder decodeObjectOfClass:[NSString class] forKey:@"resource"];
     
     // Decode id_token from a backward compatible way
     _idToken = [[coder decodeObjectOfClass:[MSIDUserInformation class] forKey:@"userInformation"] rawIdToken];
@@ -66,6 +69,7 @@
     [coder encodeObject:self.familyId forKey:@"familyId"];
     [coder encodeObject:self.refreshToken forKey:@"refreshToken"];
     [coder encodeObject:self.username forKey:@"username"];
+    [coder encodeObject:self.resource forKey:@"resource"];
     
     // Encode id_token in backward compatible way with ADAL
     MSIDUserInformation *userInformation = [[MSIDUserInformation alloc] initWithRawIdToken:self.idToken];
@@ -133,6 +137,9 @@
     // ID token
     _idToken = json[MSID_ID_TOKEN_CACHE_KEY];
     
+    // Target
+    _resource = json[MSID_TARGET_CACHE_KEY];
+    
     return self;
 }
 
@@ -150,6 +157,9 @@
     // ID token
     [dictionary setValue:_idToken forKey:MSID_ID_TOKEN_CACHE_KEY];
     
+    // Target
+    [dictionary setValue:_resource forKey:MSID_TARGET_CACHE_KEY];
+    
     return dictionary;
 }
 
@@ -163,7 +173,7 @@
         return nil;
     }
     
-    [self fillToken:response];
+    [self fillToken:response request:requestParams];
     
     return self;
 }
@@ -171,6 +181,7 @@
 #pragma mark - Fill item
 
 - (void)fillToken:(MSIDTokenResponse *)response
+          request:(MSIDRequestParameters *)requestParams
 {
     _refreshToken = response.refreshToken;
     _username = response.idTokenObj.preferredUsername;

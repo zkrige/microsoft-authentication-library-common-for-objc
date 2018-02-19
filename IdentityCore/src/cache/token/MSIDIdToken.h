@@ -24,6 +24,9 @@
 #import "MSIDBaseToken.h"
 
 @interface MSIDIdToken : MSIDBaseToken
+{
+    NSString *_rawIdToken;
+}
 
 @property (readonly) NSString *rawIdToken;
 

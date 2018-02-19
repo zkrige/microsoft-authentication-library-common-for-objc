@@ -26,7 +26,7 @@
 #import "MSIDTelemetryEventStrings.h"
 #import "MSIDTelemetry+Internal.h"
 #import "MSIDAccount.h"
-#import "MSIDAdfsToken.h"
+#import "MSIDADFSUserToken.h"
 #import "MSIDAccessToken.h"
 #import "MSIDRefreshToken.h"
 #import "MSIDBaseToken.h"
@@ -136,8 +136,8 @@
     }
     else if ([_primaryAccessor respondsToSelector:@selector(saveADFSToken:account:requestParams:context:error:)])
     {
-        MSIDAdfsToken *adfsToken = [[MSIDAdfsToken alloc] initWithTokenResponse:response
-                                                                        request:requestParams];
+        MSIDADFSUserToken *adfsToken = [[MSIDADFSUserToken alloc] initWithTokenResponse:response
+                                                                                request:requestParams];
         
         MSIDAccount *adfsAccount = [[MSIDAccount alloc] initWithUpn:@""
                                                                utid:nil
@@ -203,9 +203,9 @@
                                      error:error];
 }
 
-- (MSIDAdfsToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
-                                         context:(id<MSIDRequestContext>)context
-                                           error:(NSError **)error
+- (MSIDADFSUserToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
+                                             context:(id<MSIDRequestContext>)context
+                                               error:(NSError **)error
 {
     if ([_primaryAccessor respondsToSelector:@selector(getADFSTokenWithRequestParams:context:error:)])
     {
@@ -288,12 +288,11 @@
 }
 
 - (BOOL)removeRTForAccount:(MSIDAccount *)account
-                     token:(MSIDBaseToken *)token
+                     token:(MSIDRefreshToken *)token
                    context:(id<MSIDRequestContext>)context
                      error:(NSError **)error
 {
-    if (!token || (token.tokenType != MSIDTokenTypeRefreshToken
-                   && token.tokenType != MSIDTokenTypeLegacyADFSToken))
+    if (!token || [NSString msidIsStringNilOrBlank:token.refreshToken])
     {
         if (error)
         {
@@ -305,10 +304,10 @@
     
     NSError *cacheError = nil;
     
-    MSIDBaseToken *tokenInCache = [_primaryAccessor getLatestRTForToken:token
-                                                                account:account
-                                                                context:context
-                                                                  error:&cacheError];
+    MSIDRefreshToken *tokenInCache = [_primaryAccessor getLatestRTForToken:token
+                                                                   account:account
+                                                                   context:context
+                                                                     error:&cacheError];
     
     if (cacheError)
     {
@@ -319,7 +318,7 @@
         return NO;
     }
     
-    if (tokenInCache && [tokenInCache.msidRefreshToken isEqualToString:token.msidRefreshToken])
+    if (tokenInCache && [tokenInCache.refreshToken isEqualToString:token.refreshToken])
     {
         return [_primaryAccessor removeSharedRTForAccount:account
                                                     token:token

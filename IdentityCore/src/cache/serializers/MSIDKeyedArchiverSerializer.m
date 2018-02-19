@@ -26,7 +26,7 @@
 #import "MSIDUserInformation.h"
 #import "MSIDAccessToken.h"
 #import "MSIDRefreshToken.h"
-#import "MSIDAdfsToken.h"
+#import "MSIDADFSUserToken.h"
 
 @interface MSIDKeyedArchiverSerializer ()
 {
@@ -57,7 +57,7 @@
                 break;
                 
             case MSIDTokenTypeLegacyADFSToken:
-                _classToSerialize = MSIDAdfsToken.class;
+                _classToSerialize = MSIDADFSUserToken.class;
                 break;
                 
             default:

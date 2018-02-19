@@ -204,6 +204,9 @@
 		B2A99FFA203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = B2A99FF8203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.h */; };
 		B2A99FFB203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = B2A99FF9203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.m */; };
 		B2A99FFC203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = B2A99FF9203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.m */; };
+		B2A99FFF203A7676002ECCF1 /* MSIDADFSUserToken.h in Headers */ = {isa = PBXBuildFile; fileRef = B2A99FFD203A7676002ECCF1 /* MSIDADFSUserToken.h */; };
+		B2A9A000203A7676002ECCF1 /* MSIDADFSUserToken.m in Sources */ = {isa = PBXBuildFile; fileRef = B2A99FFE203A7676002ECCF1 /* MSIDADFSUserToken.m */; };
+		B2A9A001203A7676002ECCF1 /* MSIDADFSUserToken.m in Sources */ = {isa = PBXBuildFile; fileRef = B2A99FFE203A7676002ECCF1 /* MSIDADFSUserToken.m */; };
 		B2C17AEA1FC790420070A514 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2C17AE91FC790420070A514 /* UIKit.framework */; };
 		B2C17AEC1FC796E60070A514 /* MSIDDeviceId.m in Sources */ = {isa = PBXBuildFile; fileRef = B20E3CAD1FC4F14B0029C097 /* MSIDDeviceId.m */; };
 		B2C17AED1FC796FE0070A514 /* MSIDOAuth2Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = B20E3CB51FC4FE400029C097 /* MSIDOAuth2Constants.m */; };
@@ -498,6 +501,8 @@
 		B29CB6D31FEC9BE700F880ED /* MSIDAADV2RequestParameters.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSIDAADV2RequestParameters.m; sourceTree = "<group>"; };
 		B2A99FF8203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MSIDBaseToken+MSIDRefreshTokenAccessor.h"; sourceTree = "<group>"; };
 		B2A99FF9203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MSIDBaseToken+MSIDRefreshTokenAccessor.m"; sourceTree = "<group>"; };
+		B2A99FFD203A7676002ECCF1 /* MSIDADFSUserToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSIDADFSUserToken.h; sourceTree = "<group>"; };
+		B2A99FFE203A7676002ECCF1 /* MSIDADFSUserToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSIDADFSUserToken.m; sourceTree = "<group>"; };
 		B2C17AE91FC790420070A514 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		B2C17AEF1FC7A1BF0070A514 /* MSIDLoggerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSIDLoggerTests.m; sourceTree = "<group>"; };
 		B2C17AF21FC7A56C0070A514 /* MSIDTestLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSIDTestLogger.h; sourceTree = "<group>"; };
@@ -854,6 +859,8 @@
 				B299B4782036593C00530528 /* MSIDIdToken.m */,
 				B2A99FF8203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.h */,
 				B2A99FF9203A69F8002ECCF1 /* MSIDBaseToken+MSIDRefreshTokenAccessor.m */,
+				B2A99FFD203A7676002ECCF1 /* MSIDADFSUserToken.h */,
+				B2A99FFE203A7676002ECCF1 /* MSIDADFSUserToken.m */,
 			);
 			path = token;
 			sourceTree = "<group>";
@@ -1142,6 +1149,7 @@
 				B20657AB1FC91F6400412B7D /* MSIDTelemetry+Internal.h in Headers */,
 				B2CDB57C1FE33EC1003A4B5C /* MSIDIdTokenWrapper.h in Headers */,
 				96CD694C1FE849C800D41938 /* MSIDBrokerResponse.h in Headers */,
+				B2A99FFF203A7676002ECCF1 /* MSIDADFSUserToken.h in Headers */,
 				96CD69491FE849C800D41938 /* MSIDClientInfo.h in Headers */,
 				D61AFAB41FD8B6C600DABBE5 /* MSIDContants.h in Headers */,
 				B29CB6D41FEC9BE900F880ED /* MSIDAADV2RequestParameters.h in Headers */,
@@ -1458,6 +1466,7 @@
 				B20657BB1FC9248000412B7D /* MSIDTelemetryAPIEvent.m in Sources */,
 				B2CDB56D1FE2F42B003A4B5C /* MSIDJsonSerializer.m in Sources */,
 				B299B47B2036593C00530528 /* MSIDIdToken.m in Sources */,
+				B2A9A001203A7676002ECCF1 /* MSIDADFSUserToken.m in Sources */,
 				B214C3A51FE855290070C4F2 /* MSIDDefaultTokenCacheAccessor.m in Sources */,
 				D62600141FBD380500EE4487 /* NSString+MSIDExtensions.m in Sources */,
 				B210F4331FDDE7EB005A8F76 /* MSIDTokenResponse.m in Sources */,
@@ -1610,6 +1619,7 @@
 				B2EF143C1FF2F228005DC1C0 /* MSIDAADV2TokenResponse.m in Sources */,
 				B2115828202BD5F3005CE586 /* MSIDTokenCacheKey.m in Sources */,
 				B210F4621FDF19E9005A8F76 /* MSIDURLFormObject.m in Sources */,
+				B2A9A000203A7676002ECCF1 /* MSIDADFSUserToken.m in Sources */,
 				B2908C081FCA29EB00AFE98E /* MSIDTelemetryBaseEvent.m in Sources */,
 				96CD695D1FE84A0300D41938 /* MSIDJsonObject.m in Sources */,
 				2321531B1FDA101900C6960D /* MSIDUserInformation.m in Sources */,

@@ -24,7 +24,7 @@
 #import "MSIDLegacyTokenCacheAccessor.h"
 #import "MSIDKeyedArchiverSerializer.h"
 #import "MSIDAccount.h"
-#import "MSIDAdfsToken.h"
+#import "MSIDADFSUserToken.h"
 #import "MSIDAccessToken.h"
 #import "MSIDRefreshToken.h"
 #import "MSIDTelemetry+Internal.h"
@@ -141,7 +141,7 @@
 
 #pragma mark - ADFS tokens
 
-- (BOOL)saveADFSToken:(MSIDAdfsToken *)token
+- (BOOL)saveADFSToken:(MSIDADFSUserToken *)token
               account:(MSIDAccount *)account
         requestParams:(MSIDRequestParameters *)parameters
               context:(id<MSIDRequestContext>)context
@@ -161,16 +161,16 @@
                      error:error];
 }
 
-- (MSIDAdfsToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
-                                         context:(id<MSIDRequestContext>)context
-                                           error:(NSError **)error
+- (MSIDADFSUserToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
+                                             context:(id<MSIDRequestContext>)context
+                                               error:(NSError **)error
 {
     MSIDAccount *account = [[MSIDAccount alloc] initWithUpn:@"" utid:nil uid:nil];
-    return (MSIDAdfsToken *)[self getATForAccount:account
-                                    requestParams:parameters
-                                       serializer:_adfsSerializer
-                                          context:context
-                                            error:error];
+    return (MSIDADFSUserToken *)[self getATForAccount:account
+                                        requestParams:parameters
+                                           serializer:_adfsSerializer
+                                              context:context
+                                                error:error];
 }
 
 #pragma mark - Refresh tokens
@@ -208,10 +208,10 @@
                                                  error:error];
 }
 
-- (MSIDBaseToken *)getLatestRTForToken:(MSIDBaseToken *)token
-                               account:(MSIDAccount *)account
-                               context:(id<MSIDRequestContext>)context
-                                 error:(NSError **)error
+- (MSIDRefreshToken *)getLatestRTForToken:(MSIDRefreshToken *)token
+                                  account:(MSIDAccount *)account
+                                  context:(id<MSIDRequestContext>)context
+                                    error:(NSError **)error
 {
     if (![self checkUserIdentifier:account context:context error:error])
     {
@@ -221,7 +221,7 @@
     return (MSIDRefreshToken *)[self getItemForAccount:account
                                              authority:token.authority
                                               clientId:token.clientId
-                                              resource:token.msidResource
+                                              resource:token.resource
                                             serializer:_rtSerializer
                                                context:context
                                                  error:error];
@@ -266,7 +266,7 @@
 }
 
 - (BOOL)removeSharedRTForAccount:(MSIDAccount *)account
-                           token:(MSIDBaseToken *)token
+                           token:(MSIDRefreshToken *)token
                          context:(id<MSIDRequestContext>)context
                            error:(NSError **)error
 {
@@ -287,7 +287,7 @@
     
     MSIDTokenCacheKey *key = [MSIDTokenCacheKey keyWithAuthority:token.authority
                                                         clientId:token.clientId
-                                                        resource:token.msidResource
+                                                        resource:token.resource
                                                              upn:account.upn];
     
     return [_dataSource removeItemsWithKey:key

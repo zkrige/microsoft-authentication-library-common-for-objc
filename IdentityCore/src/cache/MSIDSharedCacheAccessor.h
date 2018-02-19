@@ -24,7 +24,7 @@
 #import <Foundation/Foundation.h>
 
 @class MSIDAccount;
-@class MSIDAdfsToken;
+@class MSIDADFSUserToken;
 @class MSIDAccessToken;
 @class MSIDRefreshToken;
 @class MSIDRequestParameters;
@@ -55,25 +55,25 @@
                                     context:(id<MSIDRequestContext>)context
                                       error:(NSError **)error;
 
-- (MSIDBaseToken *)getLatestRTForToken:(MSIDBaseToken *)token
-                               account:(MSIDAccount *)account
-                               context:(id<MSIDRequestContext>)context
-                                 error:(NSError **)error;
+- (MSIDRefreshToken *)getLatestRTForToken:(MSIDRefreshToken *)token
+                                  account:(MSIDAccount *)account
+                                  context:(id<MSIDRequestContext>)context
+                                    error:(NSError **)error;
 
 - (NSArray<MSIDRefreshToken *> *)getAllSharedRTsWithClientId:(NSString *)clientId
                                                      context:(id<MSIDRequestContext>)context
                                                        error:(NSError **)error;
 
 - (BOOL)removeSharedRTForAccount:(MSIDAccount *)account
-                           token:(MSIDBaseToken *)token
+                           token:(MSIDRefreshToken *)token
                          context:(id<MSIDRequestContext>)context
                            error:(NSError **)error;
 
 @optional
 
-- (MSIDAdfsToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
-                                         context:(id<MSIDRequestContext>)context
-                                           error:(NSError **)error;
+- (MSIDADFSUserToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
+                                             context:(id<MSIDRequestContext>)context
+                                               error:(NSError **)error;
 
 - (BOOL)saveIDToken:(MSIDIdToken *)token
             account:(MSIDAccount *)account
@@ -81,7 +81,7 @@
             context:(id<MSIDRequestContext>)context
               error:(NSError **)error;
 
-- (BOOL)saveADFSToken:(MSIDAdfsToken *)token
+- (BOOL)saveADFSToken:(MSIDADFSUserToken *)token
               account:(MSIDAccount *)account
         requestParams:(MSIDRequestParameters *)parameters
               context:(id<MSIDRequestContext>)context

@@ -24,6 +24,14 @@
 #import "MSIDBaseToken.h"
 
 @interface MSIDAccessToken : MSIDBaseToken
+{
+    NSDate *_expiresOn;
+    NSDate *_cachedAt;
+    NSString *_accessToken;
+    NSString *_idToken;
+    NSString *_resource;
+    NSOrderedSet<NSString *> *_scopes;
+}
 
 @property (readonly) NSDate *expiresOn;
 @property (readonly) NSDate *cachedAt;
@@ -37,7 +45,5 @@
 
 // v2 access tokens are scoped down to resources
 @property (readonly) NSOrderedSet<NSString *> *scopes;
-
-- (BOOL)isExpired;
 
 @end
