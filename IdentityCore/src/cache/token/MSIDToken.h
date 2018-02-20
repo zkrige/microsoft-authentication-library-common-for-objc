@@ -21,20 +21,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "MSIDBaseCacheItem.h"
 
-typedef NS_ENUM(NSInteger, MSIDTokenType)
-{
-    MSIDTokenTypeAccessToken = 1,
-    MSIDTokenTypeRefreshToken = 2,
-    MSIDTokenTypeIDToken = 3,
-    MSIDTokenTypeLegacyADFSToken = 4,
-    MSIDTokenTypeOther = 5
-};
+@interface MSIDToken : MSIDBaseCacheItem
 
-@interface MSIDTokenTypeHelpers : NSObject
+// Token type
+@property (readonly) MSIDTokenType tokenType;
 
-+ (NSString *)tokenTypeAsString:(MSIDTokenType)type;
-+ (MSIDTokenType)tokenTypeFromString:(NSString *)type;
+// Tokens
+@property (readonly) NSString *accessToken;
+@property (readonly) NSString *refreshToken;
+@property (readonly) NSString *idToken;
+
+// Generic credential
+@property (readonly) NSString *genericToken;
+
+// Targets
+@property (readonly) NSString *resource;
+@property (readonly) NSOrderedSet<NSString *> *scopes;
+
+// Dates
+@property (readonly) NSDate *expiresOn;
+@property (readonly) NSDate *cachedAt;
+
+// Family ID
+@property (readonly) NSString *familyId;
+
+- (instancetype)initWithTokenResponse:(MSIDTokenResponse *)response
+                              request:(MSIDRequestParameters *)requestParams
+                            tokenType:(MSIDTokenType)tokenType;
 
 @end
