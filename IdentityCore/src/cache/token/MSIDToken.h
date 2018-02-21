@@ -47,8 +47,32 @@
 // Family ID
 @property (readonly) NSString *familyId;
 
+/*
 - (instancetype)initWithTokenResponse:(MSIDTokenResponse *)response
                               request:(MSIDRequestParameters *)requestParams
-                            tokenType:(MSIDTokenType)tokenType;
+                            tokenType:(MSIDTokenType)tokenType;*/
+
+- (instancetype)initWithAuthority:(NSURL *)authority
+                         clientId:(NSString *)clientId
+                     uniqueUserId:(NSString *)uniqueUserId
+                         username:(NSString *)username
+                       clientInfo:(MSIDClientInfo *)clientInfo
+                   additionalInfo:(NSDictionary *)additionalInfo
+                        tokenType:(MSIDTokenType)tokenType;
+
+- (void)updateRefreshTokenWithToken:(NSString *)refreshToken
+                            idToken:(NSString *)idToken
+                           familyId:(NSString *)familyId;
+
+- (void)updateAccessTokenWithToken:(NSString *)accessToken
+                           idToken:(NSString *)idToken
+                         expiresOn:(NSDate *)expiresOn
+                          cachedAt:(NSDate *)cachedAt
+                      extExpiresOn:(NSDate *)extExpiresOnDate
+                            target:(NSString *)target;
+
+- (void)updateIDTokenWithToken:(NSString *)idToken;
+
+- (void)updateADFSTokenWithRefreshToken:(NSString *)refreshToken;
 
 @end

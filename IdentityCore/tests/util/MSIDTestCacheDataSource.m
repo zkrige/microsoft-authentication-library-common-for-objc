@@ -26,10 +26,10 @@
 #import "MSIDCacheItemSerializer.h"
 #import "MSIDKeyedArchiverSerializer.h"
 #import "MSIDJsonSerializer.h"
-#import "MSIDAdfsToken.h"
-#import "MSIDAccessToken.h"
-#import "MSIDRefreshToken.h"
-#import "MSIDIdToken.h"
+#import "MSIDToken.h"
+#import "MSIDToken.h"
+#import "MSIDToken.h"
+#import "MSIDToken.h"
 
 @interface MSIDTestCacheDataSource()
 {
@@ -81,7 +81,7 @@
     {
         if (error)
         {
-            *error = MSIDCreateError(MSIDErrorDomain, MSIDErrorInternal, @"Couldn't serialize the MSIDBaseToken item", nil, nil, nil, nil, nil);
+            *error = MSIDCreateError(MSIDErrorDomain, MSIDErrorInternal, @"Couldn't serialize the MSIDToken item", nil, nil, nil, nil, nil);
         }
         
         return NO;
@@ -286,7 +286,7 @@
         
         for (NSData *tokenData in [_cacheContents allValues])
         {
-            MSIDBaseToken *token = (MSIDBaseToken *)[serializer deserialize:tokenData];
+            MSIDToken *token = (MSIDToken *)[serializer deserialize:tokenData];
             
             if (token && token.tokenType == type)
             {

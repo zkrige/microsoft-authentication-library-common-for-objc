@@ -25,58 +25,58 @@
 #import "MSIDRefreshableToken.h"
 
 @class MSIDAccount;
-@class MSIDAdfsToken;
-@class MSIDAccessToken;
-@class MSIDRefreshToken;
+@class MSIDToken;
+@class MSIDToken;
+@class MSIDToken;
 @class MSIDRequestParameters;
-@class MSIDBaseToken;
-@class MSIDIdToken;
+@class MSIDToken;
+@class MSIDToken;
 
 @protocol MSIDSharedCacheAccessor <NSObject>
 
-- (BOOL)saveAccessToken:(MSIDAccessToken *)token
+- (BOOL)saveAccessToken:(MSIDToken *)token
                 account:(MSIDAccount *)account
           requestParams:(MSIDRequestParameters *)parameters
                 context:(id<MSIDRequestContext>)context
                   error:(NSError **)error;
 
-- (MSIDAccessToken *)getATForAccount:(MSIDAccount *)account
+- (MSIDToken *)getATForAccount:(MSIDAccount *)account
                        requestParams:(MSIDRequestParameters *)parameters
                              context:(id<MSIDRequestContext>)context
                                error:(NSError **)error;
 
 - (BOOL)saveSharedRTForAccount:(MSIDAccount *)account
-                  refreshToken:(MSIDRefreshToken *)refreshToken
+                  refreshToken:(MSIDToken *)refreshToken
                        context:(id<MSIDRequestContext>)context
                          error:(NSError **)error;
 
 
-- (MSIDRefreshToken *)getSharedRTForAccount:(MSIDAccount *)account
+- (MSIDToken *)getSharedRTForAccount:(MSIDAccount *)account
                               requestParams:(MSIDRequestParameters *)parameters
                                     context:(id<MSIDRequestContext>)context
                                       error:(NSError **)error;
 
-- (MSIDBaseToken<MSIDRefreshableToken> *)getLatestRTForToken:(MSIDBaseToken<MSIDRefreshableToken> *)token
-                                                     account:(MSIDAccount *)account
-                                                     context:(id<MSIDRequestContext>)context
-                                                       error:(NSError **)error;
+- (MSIDToken *)getLatestRTForToken:(MSIDToken *)token
+                           account:(MSIDAccount *)account
+                           context:(id<MSIDRequestContext>)context
+                             error:(NSError **)error;
 
-- (NSArray<MSIDRefreshToken *> *)getAllSharedRTsWithClientId:(NSString *)clientId
+- (NSArray<MSIDToken *> *)getAllSharedRTsWithClientId:(NSString *)clientId
                                                      context:(id<MSIDRequestContext>)context
                                                        error:(NSError **)error;
 
 - (BOOL)removeSharedRTForAccount:(MSIDAccount *)account
-                           token:(MSIDBaseToken<MSIDRefreshableToken> *)token
+                           token:(MSIDToken *)token
                          context:(id<MSIDRequestContext>)context
                            error:(NSError **)error;
 
 @optional
 
-- (MSIDAdfsToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
+- (MSIDToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
                                          context:(id<MSIDRequestContext>)context
                                            error:(NSError **)error;
 
-- (BOOL)saveIDToken:(MSIDIdToken *)token
+- (BOOL)saveIDToken:(MSIDToken *)token
             account:(MSIDAccount *)account
       requestParams:(MSIDRequestParameters *)parameters
             context:(id<MSIDRequestContext>)context
@@ -87,7 +87,7 @@
             context:(id<MSIDRequestContext>)context
               error:(NSError **)error;
 
-- (BOOL)saveADFSToken:(MSIDAdfsToken *)token
+- (BOOL)saveADFSToken:(MSIDToken *)token
               account:(MSIDAccount *)account
         requestParams:(MSIDRequestParameters *)parameters
               context:(id<MSIDRequestContext>)context

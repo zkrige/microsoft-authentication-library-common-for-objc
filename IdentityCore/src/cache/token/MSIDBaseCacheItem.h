@@ -51,7 +51,15 @@
 
 - (BOOL)isEqualToItem:(MSIDBaseCacheItem *)item;
 
+/*
 - (instancetype)initWithTokenResponse:(MSIDTokenResponse *)response
-                              request:(MSIDRequestParameters *)requestParams;
+                              request:(MSIDRequestParameters *)requestParams;*/
+
+- (instancetype)initWithAuthority:(NSURL *)authority
+                         clientId:(NSString *)clientId
+                     uniqueUserId:(NSString *)uniqueUserId
+                         username:(NSString *)username
+                       clientInfo:(MSIDClientInfo *)clientInfo
+                   additionalInfo:(NSDictionary *)additionalInfo;
 
 @end

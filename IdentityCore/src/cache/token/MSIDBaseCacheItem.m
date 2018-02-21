@@ -249,6 +249,28 @@
     return self;
 }
 
+- (instancetype)initWithAuthority:(NSURL *)authority
+                         clientId:(NSString *)clientId
+                     uniqueUserId:(NSString *)uniqueUserId
+                         username:(NSString *)username
+                       clientInfo:(MSIDClientInfo *)clientInfo
+                   additionalInfo:(NSDictionary *)additionalInfo
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _authority = authority;
+        _clientId = clientId;
+        _additionalInfo = additionalInfo;
+        _username = username;
+        _clientInfo = clientInfo;
+        _uniqueUserId = uniqueUserId;
+    }
+    
+    return self;
+}
+
 #pragma mark - Fill item
 
 - (void)fillTokenFromResponse:(MSIDTokenResponse *)response

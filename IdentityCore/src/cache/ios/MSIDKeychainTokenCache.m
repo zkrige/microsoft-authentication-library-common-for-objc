@@ -27,7 +27,7 @@
 #import "MSIDKeychainUtil.h"
 #import "MSIDBaseCacheItem.h"
 #import "MSIDError.h"
-#import "MSIDRefreshToken.h"
+#import "MSIDToken.h"
 
 static NSString *const s_wipeLibraryString = @"Microsoft.ADAL.WipeAll.1";
 static MSIDKeychainTokenCache *s_defaultCache = nil;
@@ -309,8 +309,8 @@ static NSString *s_defaultKeychainGroup = @"com.microsoft.adalcache";
         if (tokenItem)
         {
             // Delete tombstones generated from previous versions of ADAL.
-            if ([tokenItem isKindOfClass:[MSIDRefreshToken class]]
-                && [((MSIDRefreshToken *)tokenItem).refreshToken isEqualToString:@"<tombstone>"])
+            if ([tokenItem isKindOfClass:[MSIDToken class]]
+                && [((MSIDToken *)tokenItem).refreshToken isEqualToString:@"<tombstone>"])
             {
                 [self deleteTombstoneWithService:attrs[(id)kSecAttrService]
                                          account:attrs[(id)kSecAttrAccount]

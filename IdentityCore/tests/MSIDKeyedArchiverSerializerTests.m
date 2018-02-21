@@ -23,8 +23,8 @@
 
 #import <XCTest/XCTest.h>
 #import "MSIDKeyedArchiverSerializer.h"
-#import "MSIDBaseToken.h"
-#import "MSIDAccessToken.h"
+#import "MSIDToken.h"
+#import "MSIDToken.h"
 #import "NSDictionary+MSIDTestUtil.h"
 
 @interface MSIDKeyedArchiverSerializerTests : XCTestCase
@@ -46,7 +46,7 @@
 - (void)test_whenSerializeToken_shouldReturnSameTokenOnDeserialize
 {
     MSIDKeyedArchiverSerializer *serializer = [[MSIDKeyedArchiverSerializer alloc] initForTokenType:MSIDTokenTypeAccessToken];
-    MSIDAccessToken *expectedToken = [MSIDAccessToken new];
+    MSIDToken *expectedToken = [MSIDToken new];
     [expectedToken setValue:@"access token value" forKey:@"accessToken"];
     [expectedToken setValue:@"id token value" forKey:@"idToken"];
     [expectedToken setValue:[NSDate new] forKey:@"expiresOn"];
@@ -65,7 +65,7 @@
     [expectedToken setValue:@"some clientId" forKey:@"clientId"];
     
     NSData *data = [serializer serialize:expectedToken];
-    MSIDAccessToken *resultToken = (MSIDAccessToken *)[serializer deserialize:data];
+    MSIDToken *resultToken = (MSIDToken *)[serializer deserialize:data];
     
     XCTAssertNotNil(data);
     XCTAssertEqualObjects(resultToken, expectedToken);
@@ -84,7 +84,7 @@
 {
     MSIDKeyedArchiverSerializer *serializer = [[MSIDKeyedArchiverSerializer alloc] initForTokenType:MSIDTokenTypeAccessToken];
     
-    NSData *data = [serializer serialize:[MSIDAccessToken new]];
+    NSData *data = [serializer serialize:[MSIDToken new]];
     
     XCTAssertNotNil(data);
 }
@@ -93,7 +93,7 @@
 {
     MSIDKeyedArchiverSerializer *serializer = [[MSIDKeyedArchiverSerializer alloc] initForTokenType:MSIDTokenTypeAccessToken];
     
-    MSIDAccessToken *token = (MSIDAccessToken *)[serializer deserialize:nil];
+    MSIDToken *token = (MSIDToken *)[serializer deserialize:nil];
     
     XCTAssertNil(token);
 }
@@ -103,7 +103,7 @@
     MSIDKeyedArchiverSerializer *serializer = [[MSIDKeyedArchiverSerializer alloc] initForTokenType:MSIDTokenTypeAccessToken];
     NSData *data = [@"some" dataUsingEncoding:NSUTF8StringEncoding];
     
-    MSIDAccessToken *token = (MSIDAccessToken *)[serializer deserialize:data];
+    MSIDToken *token = (MSIDToken *)[serializer deserialize:data];
     
     XCTAssertNil(token);
 }

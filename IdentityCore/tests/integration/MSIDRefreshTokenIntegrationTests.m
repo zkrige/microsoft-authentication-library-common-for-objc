@@ -23,7 +23,7 @@
 
 #import <XCTest/XCTest.h>
 #import "MSIDTestTokenResponse.h"
-#import "MSIDRefreshToken.h"
+#import "MSIDToken.h"
 #import "MSIDTestCacheIdentifiers.h"
 #import "MSIDTestRequestParams.h"
 #import "MSIDAADV1TokenResponse.h"
@@ -33,11 +33,11 @@
 #import "NSDictionary+MSIDTestUtil.h"
 #import "MSIDTestIdTokenUtil.h"
 
-@interface MSIDRefreshTokenIntegrationTests : XCTestCase
+@interface MSIDTokenIntegrationTests : XCTestCase
 
 @end
 
-@implementation MSIDRefreshTokenIntegrationTests
+@implementation MSIDTokenIntegrationTests
 
 #pragma mark - Init
 
@@ -51,7 +51,7 @@
     
     MSIDRequestParameters *params = [MSIDTestRequestParams defaultParams];
     
-    MSIDRefreshToken *token = [[MSIDRefreshToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -72,7 +72,7 @@
     MSIDAADV1TokenResponse *response = [MSIDTestTokenResponse v1DefaultTokenResponse];
     MSIDAADV1RequestParameters *params = [MSIDTestRequestParams v1DefaultParams];
     
-    MSIDRefreshToken *token = [[MSIDRefreshToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -99,7 +99,7 @@
     MSIDAADV1TokenResponse *response = [MSIDTestTokenResponse v1DefaultTokenResponseWithFamilyId:DEFAULT_TEST_FAMILY_ID];
     MSIDAADV1RequestParameters *params = [MSIDTestRequestParams v1DefaultParams];
     
-    MSIDRefreshToken *token = [[MSIDRefreshToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -126,7 +126,7 @@
     MSIDAADV1TokenResponse *response = [MSIDTestTokenResponse v1DefaultTokenResponse];
     MSIDAADV2RequestParameters *params = [MSIDTestRequestParams v2DefaultParams];
     
-    MSIDRefreshToken *token = [[MSIDRefreshToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -153,7 +153,7 @@
     MSIDAADV2TokenResponse *response = [MSIDTestTokenResponse v2DefaultTokenResponse];
     MSIDAADV1RequestParameters *params = [MSIDTestRequestParams v1DefaultParams];
     
-    MSIDRefreshToken *token = [[MSIDRefreshToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -180,7 +180,7 @@
     MSIDAADV2TokenResponse *response = [MSIDTestTokenResponse v2DefaultTokenResponse];
     MSIDAADV2RequestParameters *params = [MSIDTestRequestParams v2DefaultParams];
     
-    MSIDRefreshToken *token = [[MSIDRefreshToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -219,7 +219,7 @@
                                @"username":@"test user"
                                };
     
-    MSIDRefreshToken *token = [[MSIDRefreshToken alloc] initWithJSONDictionary:jsonDict error:nil];
+    MSIDToken *token = [[MSIDToken alloc] initWithJSONDictionary:jsonDict error:nil];
     
     XCTAssertNotNil(token);
     NSURL *authority = [NSURL URLWithString:@"https://login.microsoftonline.com/common"];
@@ -247,7 +247,7 @@
                                @"username":@"test user"
                                };
     
-    MSIDRefreshToken *token = [[MSIDRefreshToken alloc] initWithJSONDictionary:jsonDict error:nil];
+    MSIDToken *token = [[MSIDToken alloc] initWithJSONDictionary:jsonDict error:nil];
     
     XCTAssertNotNil(token);
     NSURL *authority = [NSURL URLWithString:@"https://login.microsoftonline.com/common"];
@@ -278,7 +278,7 @@
                                @"username":@"test user"
                                };
     
-    MSIDRefreshToken *token = [[MSIDRefreshToken alloc] initWithJSONDictionary:jsonDict error:nil];
+    MSIDToken *token = [[MSIDToken alloc] initWithJSONDictionary:jsonDict error:nil];
     
     NSDictionary *serializedDict = [token jsonDictionary];
     XCTAssertEqualObjects(serializedDict, jsonDict);

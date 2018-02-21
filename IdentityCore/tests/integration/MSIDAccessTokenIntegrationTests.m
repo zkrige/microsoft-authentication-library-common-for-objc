@@ -23,7 +23,7 @@
 
 #import <XCTest/XCTest.h>
 #import "MSIDTestTokenResponse.h"
-#import "MSIDAccessToken.h"
+#import "MSIDToken.h"
 #import "MSIDTestCacheIdentifiers.h"
 #import "MSIDTestRequestParams.h"
 #import "MSIDAADV1TokenResponse.h"
@@ -33,11 +33,11 @@
 #import "NSDictionary+MSIDTestUtil.h"
 #import "MSIDTestIdTokenUtil.h"
 
-@interface MSIDAccessTokenIntegrationTests : XCTestCase
+@interface MSIDTokenIntegrationTests : XCTestCase
 
 @end
 
-@implementation MSIDAccessTokenIntegrationTests
+@implementation MSIDTokenIntegrationTests
 
 #pragma mark - Init
 
@@ -51,7 +51,7 @@
     
     MSIDRequestParameters *params = [MSIDTestRequestParams defaultParams];
     
-    MSIDAccessToken *token = [[MSIDAccessToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -76,7 +76,7 @@
     MSIDAADV1TokenResponse *response = [MSIDTestTokenResponse v1DefaultTokenResponse];
     MSIDAADV1RequestParameters *params = [MSIDTestRequestParams v1DefaultParams];
     
-    MSIDAccessToken *token = [[MSIDAccessToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -104,7 +104,7 @@
     MSIDAADV1TokenResponse *response = [MSIDTestTokenResponse v1DefaultTokenResponse];
     MSIDAADV2RequestParameters *params = [MSIDTestRequestParams v2DefaultParams];
     
-    MSIDAccessToken *token = [[MSIDAccessToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -132,7 +132,7 @@
     MSIDAADV2TokenResponse *response = [MSIDTestTokenResponse v2DefaultTokenResponse];
     MSIDAADV1RequestParameters *params = [MSIDTestRequestParams v1DefaultParams];
 
-    MSIDAccessToken *token = [[MSIDAccessToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -163,7 +163,7 @@
     MSIDAADV2TokenResponse *response = [MSIDTestTokenResponse v2DefaultTokenResponse];
     MSIDAADV2RequestParameters *params = [MSIDTestRequestParams v2DefaultParams];
     
-    MSIDAccessToken *token = [[MSIDAccessToken alloc] initWithTokenResponse:response request:params];
+    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
     
     XCTAssertEqualObjects(token.authority, params.authority);
     XCTAssertEqualObjects(token.clientId, params.clientId);
@@ -210,7 +210,7 @@
                                @"secret":@"access_token"
                                };
     
-    MSIDAccessToken *token = [[MSIDAccessToken alloc] initWithJSONDictionary:jsonDict error:nil];
+    MSIDToken *token = [[MSIDToken alloc] initWithJSONDictionary:jsonDict error:nil];
     
     XCTAssertNotNil(token);
     NSURL *authority = [NSURL URLWithString:@"https://login.microsoftonline.com/contoso.com"];
@@ -245,7 +245,7 @@
                                @"secret":@"access_token"
                                };
     
-    MSIDAccessToken *token = [[MSIDAccessToken alloc] initWithJSONDictionary:jsonDict error:nil];
+    MSIDToken *token = [[MSIDToken alloc] initWithJSONDictionary:jsonDict error:nil];
     
     XCTAssertNotNil(token);
     NSURL *authority = [NSURL URLWithString:@"https://login.microsoftonline.com/contoso.com"];
@@ -282,7 +282,7 @@
                                @"secret":@"access_token"
                                };
     
-    MSIDAccessToken *token = [[MSIDAccessToken alloc] initWithJSONDictionary:jsonDict error:nil];
+    MSIDToken *token = [[MSIDToken alloc] initWithJSONDictionary:jsonDict error:nil];
     
     NSDictionary *serializedDict = [token jsonDictionary];
     XCTAssertEqualObjects(serializedDict, jsonDict);
@@ -306,7 +306,7 @@
                                @"secret":@"access_token"
                                };
     
-    MSIDAccessToken *token = [[MSIDAccessToken alloc] initWithJSONDictionary:jsonDict error:nil];
+    MSIDToken *token = [[MSIDToken alloc] initWithJSONDictionary:jsonDict error:nil];
     
     NSDictionary *expectedDict = @{@"credential_type" : @"AccessToken",
                                    @"unique_id" : @"user_unique_id",

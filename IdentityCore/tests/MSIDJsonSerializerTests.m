@@ -23,9 +23,9 @@
 
 #import <XCTest/XCTest.h>
 #import "MSIDJsonSerializer.h"
-#import "MSIDBaseToken.h"
+#import "MSIDToken.h"
 #import "NSDictionary+MSIDTestUtil.h"
-#import "MSIDRefreshToken.h"
+#import "MSIDToken.h"
 #import "MSIDBaseCacheItem.h"
 
 @interface MSIDJsonSerializerTests : XCTestCase
@@ -47,7 +47,7 @@
 - (void)test_whenSerializeToken_shouldReturnSameTokenOnDeserialize
 {
     MSIDJsonSerializer *serializer = [[MSIDJsonSerializer alloc] initForTokenType:MSIDTokenTypeRefreshToken];
-    MSIDRefreshToken *expectedToken = [MSIDRefreshToken new];
+    MSIDToken *expectedToken = [MSIDToken new];
     [expectedToken setValue:@"refresh token value" forKey:@"refreshToken"];
     [expectedToken setValue:@"familyId value" forKey:@"familyId"];
     [expectedToken setValue:[self createClientInfo:@{@"key" : @"value"}] forKey:@"clientInfo"];
@@ -56,7 +56,7 @@
     [expectedToken setValue:@"some clientId" forKey:@"clientId"];
     
     NSData *data = [serializer serialize:expectedToken];
-    MSIDRefreshToken *resultToken = (MSIDRefreshToken *)[serializer deserialize:data];
+    MSIDToken *resultToken = (MSIDToken *)[serializer deserialize:data];
     
     XCTAssertNotNil(data);
     XCTAssertEqualObjects(resultToken, expectedToken);
@@ -75,7 +75,7 @@
 {
     MSIDJsonSerializer *serializer = [[MSIDJsonSerializer alloc] initForTokenType:MSIDTokenTypeAccessToken];
     
-    NSData *data = [serializer serialize:[MSIDRefreshToken new]];
+    NSData *data = [serializer serialize:[MSIDToken new]];
     
     XCTAssertNotNil(data);
 }
@@ -84,7 +84,7 @@
 {
     MSIDJsonSerializer *serializer = [[MSIDJsonSerializer alloc] initForTokenType:MSIDTokenTypeAccessToken];
     
-    MSIDRefreshToken *token = (MSIDRefreshToken *)[serializer deserialize:nil];
+    MSIDToken *token = (MSIDToken *)[serializer deserialize:nil];
     
     XCTAssertNil(token);
 }

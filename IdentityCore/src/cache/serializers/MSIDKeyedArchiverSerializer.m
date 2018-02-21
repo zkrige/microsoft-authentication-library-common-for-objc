@@ -23,9 +23,9 @@
 
 #import "MSIDKeyedArchiverSerializer.h"
 #import "MSIDUserInformation.h"
-#import "MSIDAccessToken.h"
-#import "MSIDRefreshToken.h"
-#import "MSIDAdfsToken.h"
+#import "MSIDToken.h"
+#import "MSIDToken.h"
+#import "MSIDToken.h"
 #import "MSIDAccount.h"
 
 @interface MSIDKeyedArchiverSerializer ()
@@ -45,19 +45,19 @@
     
     if (self)
     {
-        _classToSerialize = MSIDBaseToken.class;
+        _classToSerialize = MSIDToken.class;
         
         switch (type) {
             case MSIDTokenTypeAccessToken:
-                _classToSerialize = MSIDAccessToken.class;
+                _classToSerialize = MSIDToken.class;
                 break;
                 
             case MSIDTokenTypeRefreshToken:
-                _classToSerialize = MSIDRefreshToken.class;
+                _classToSerialize = MSIDToken.class;
                 break;
                 
             case MSIDTokenTypeLegacyADFSToken:
-                _classToSerialize = MSIDAdfsToken.class;
+                _classToSerialize = MSIDToken.class;
                 break;
                 
             default:

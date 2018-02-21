@@ -24,9 +24,9 @@
 #import "MSIDLegacyTokenCacheAccessor.h"
 #import "MSIDKeyedArchiverSerializer.h"
 #import "MSIDAccount.h"
-#import "MSIDAdfsToken.h"
-#import "MSIDAccessToken.h"
-#import "MSIDRefreshToken.h"
+#import "MSIDToken.h"
+#import "MSIDToken.h"
+#import "MSIDToken.h"
 #import "MSIDTelemetry+Internal.h"
 #import "MSIDTelemetryEventStrings.h"
 #import "MSIDTelemetryCacheEvent.h"
@@ -101,7 +101,7 @@
 
 #pragma mark - Access tokens
 
-- (BOOL)saveAccessToken:(MSIDAccessToken *)token
+- (BOOL)saveAccessToken:(MSIDToken *)token
                 account:(MSIDAccount *)account
           requestParams:(MSIDRequestParameters *)parameters
                 context:(id<MSIDRequestContext>)context
@@ -121,7 +121,7 @@
                      error:error];
 }
 
-- (MSIDAccessToken *)getATForAccount:(MSIDAccount *)account
+- (MSIDToken *)getATForAccount:(MSIDAccount *)account
                        requestParams:(MSIDRequestParameters *)parameters
                              context:(id<MSIDRequestContext>)context
                                error:(NSError **)error
@@ -140,7 +140,7 @@
 
 #pragma mark - ADFS tokens
 
-- (BOOL)saveADFSToken:(MSIDAdfsToken *)token
+- (BOOL)saveADFSToken:(MSIDToken *)token
               account:(MSIDAccount *)account
         requestParams:(MSIDRequestParameters *)parameters
               context:(id<MSIDRequestContext>)context
@@ -160,12 +160,12 @@
                      error:error];
 }
 
-- (MSIDAdfsToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
+- (MSIDToken *)getADFSTokenWithRequestParams:(MSIDRequestParameters *)parameters
                                          context:(id<MSIDRequestContext>)context
                                            error:(NSError **)error
 {
     MSIDAccount *account = [[MSIDAccount alloc] initWithUpn:@"" utid:nil uid:nil];
-    return (MSIDAdfsToken *)[self getATForAccount:account
+    return (MSIDToken *)[self getATForAccount:account
                                     requestParams:parameters
                                        serializer:_adfsSerializer
                                           context:context
@@ -175,7 +175,7 @@
 #pragma mark - Refresh tokens
 
 - (BOOL)saveSharedRTForAccount:(MSIDAccount *)account
-                  refreshToken:(MSIDRefreshToken *)refreshToken
+                  refreshToken:(MSIDToken *)refreshToken
                        context:(id<MSIDRequestContext>)context
                          error:(NSError **)error
 {
@@ -193,12 +193,12 @@
                      error:error];
 }
 
-- (MSIDRefreshToken *)getSharedRTForAccount:(MSIDAccount *)account
+- (MSIDToken *)getSharedRTForAccount:(MSIDAccount *)account
                               requestParams:(MSIDRequestParameters *)parameters
                                     context:(id<MSIDRequestContext>)context
                                       error:(NSError **)error
 {
-    return (MSIDRefreshToken *)[self getItemForAccount:account
+    return (MSIDToken *)[self getItemForAccount:account
                                              authority:parameters.authority
                                               clientId:parameters.clientId
                                               resource:nil
@@ -207,17 +207,17 @@
                                                  error:error];
 }
 
-- (MSIDBaseToken<MSIDRefreshableToken> *)getLatestRTForToken:(MSIDBaseToken<MSIDRefreshableToken> *)token
-                                                     account:(MSIDAccount *)account
-                                                     context:(id<MSIDRequestContext>)context
-                                                       error:(NSError **)error
+- (MSIDToken *)getLatestRTForToken:(MSIDToken *)token
+                           account:(MSIDAccount *)account
+                           context:(id<MSIDRequestContext>)context
+                             error:(NSError **)error
 {
     if (![self checkUserIdentifier:account context:context error:error])
     {
         return nil;
     }
     
-    return (MSIDRefreshToken *)[self getItemForAccount:account
+    return (MSIDToken *)[self getItemForAccount:account
                                              authority:token.authority
                                               clientId:token.clientId
                                               resource:token.resource
@@ -226,7 +226,7 @@
                                                  error:error];
 }
 
-- (NSArray<MSIDRefreshToken *> *)getAllSharedRTsWithClientId:(NSString *)clientId
+- (NSArray<MSIDToken *> *)getAllSharedRTsWithClientId:(NSString *)clientId
                                                      context:(id<MSIDRequestContext>)context
                                                        error:(NSError **)error
 {
@@ -250,7 +250,7 @@
     
     NSMutableArray *resultRTs = [NSMutableArray array];
     
-    for (MSIDRefreshToken *token in legacyTokens)
+    for (MSIDToken *token in legacyTokens)
     {
         if (![NSString msidIsStringNilOrBlank:token.refreshToken]
             && [token.clientId isEqualToString:clientId])
@@ -265,7 +265,7 @@
 }
 
 - (BOOL)removeSharedRTForAccount:(MSIDAccount *)account
-                           token:(MSIDBaseToken<MSIDRefreshableToken> *)token
+                           token:(MSIDToken *)token
                          context:(id<MSIDRequestContext>)context
                            error:(NSError **)error
 {
@@ -296,7 +296,7 @@
 
 #pragma mark - Helper methods
 
-- (MSIDAccessToken *)getATForAccount:(MSIDAccount *)account
+- (MSIDToken *)getATForAccount:(MSIDAccount *)account
                        requestParams:(MSIDRequestParameters *)parameters
                           serializer:(id<MSIDCacheItemSerializer>)serializer
                              context:(id<MSIDRequestContext>)context
@@ -309,7 +309,7 @@
     
     MSIDAADV1RequestParameters *aadRequestParams = (MSIDAADV1RequestParameters *)parameters;
     
-    return (MSIDAccessToken *)[self getItemForAccount:account
+    return (MSIDToken *)[self getItemForAccount:account
                                             authority:aadRequestParams.authority
                                              clientId:aadRequestParams.clientId
                                              resource:aadRequestParams.resource
@@ -318,7 +318,7 @@
                                                 error:error];
 }
 
-- (BOOL)saveToken:(MSIDBaseToken *)token
+- (BOOL)saveToken:(MSIDToken *)token
           account:(MSIDAccount *)account
          clientId:(NSString *)clientId
        serializer:(id<MSIDCacheItemSerializer>)serializer
@@ -338,16 +338,9 @@
     // it with we switch it out before saving it to cache.
     token.authority = newAuthority;
     
-    NSString *resource = nil;
-    
-    if ([token isKindOfClass:[MSIDAccessToken class]])
-    {
-        resource = ((MSIDAccessToken *)token).resource;
-    }
-    
     MSIDTokenCacheKey *key = [MSIDTokenCacheKey keyWithAuthority:newAuthority
                                                         clientId:clientId
-                                                        resource:resource
+                                                        resource:token.resource
                                                              upn:account.legacyUserId];
     
     BOOL result = [_dataSource setItem:token key:key serializer:serializer context:context error:error];
@@ -357,7 +350,7 @@
     return result;
 }
 
-- (MSIDBaseToken *)getItemForAccount:(MSIDAccount *)account
+- (MSIDToken *)getItemForAccount:(MSIDAccount *)account
                            authority:(NSURL *)authority
                             clientId:(NSString *)clientId
                             resource:(NSString *)resource
@@ -408,7 +401,7 @@
             return nil;
         }
         
-        for (MSIDBaseToken *token in tokens)
+        for (MSIDToken *token in tokens)
         {
             token.authority = authority;
             
@@ -442,7 +435,7 @@
 #pragma mark - Telemetry helpers
 
 - (void)stopTelemetryEvent:(MSIDTelemetryCacheEvent *)event
-                 withToken:(MSIDBaseToken *)token
+                 withToken:(MSIDToken *)token
                    success:(BOOL)success
                    context:(id<MSIDRequestContext>)context
 {

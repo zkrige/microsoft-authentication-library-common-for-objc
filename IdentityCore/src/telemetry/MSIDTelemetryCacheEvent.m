@@ -24,7 +24,7 @@
 #import "MSIDTelemetry.h"
 #import "MSIDTelemetryCacheEvent.h"
 #import "MSIDTelemetryEventStrings.h"
-#import "MSIDRefreshToken.h"
+#import "MSIDToken.h"
 
 @implementation MSIDTelemetryCacheEvent
 
@@ -105,14 +105,14 @@
     [self setProperty:MSID_TELEMETRY_KEY_SPE_INFO value:speInfo];
 }
 
-- (void)setToken:(MSIDBaseToken *)token
+- (void)setToken:(MSIDToken *)token
 {
     [self setTokenType:token.tokenType];
     [self setSpeInfo:token.additionalInfo[MSID_TELEMETRY_KEY_SPE_INFO]];
     
     if (token.tokenType == MSIDTokenTypeRefreshToken)
     {
-        MSIDRefreshToken *refresToken = (MSIDRefreshToken *)token;
+        MSIDToken *refresToken = (MSIDToken *)token;
         [self setIsFRT:[NSString msidIsStringNilOrBlank:refresToken.familyId] ? MSID_TELEMETRY_VALUE_NO : MSID_TELEMETRY_VALUE_YES];
     }
 }

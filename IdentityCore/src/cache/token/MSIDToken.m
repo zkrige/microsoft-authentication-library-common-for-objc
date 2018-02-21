@@ -24,9 +24,6 @@
 #import "MSIDToken.h"
 #import "NSDate+MSIDExtensions.h"
 #import "MSIDUserInformation.h"
-#import "MSIDAADTokenResponse.h"
-#import "MSIDAADV1TokenResponse.h"
-#import "MSIDAADV1RequestParameters.h"
 
 //in seconds, ensures catching of clock differences between the server and the device
 static uint64_t s_expirationBuffer = 300;
@@ -312,18 +309,6 @@ static uint64_t s_expirationBuffer = 300;
     return dictionary;
 }
 
-- (void)fillRefreshTokenFromTokenResponse:(MSIDTokenResponse *)response
-                                  request:(MSIDRequestParameters *)requestParams
-{
-    _refreshToken = response.refreshToken;
-    
-    if ([response isKindOfClass:[MSIDAADTokenResponse class]])
-    {
-        MSIDAADTokenResponse *aadTokenResponse = (MSIDAADTokenResponse *)response;
-        _familyId = aadTokenResponse.familyId;
-    }
-}
-
 #pragma mark - ID tokens
 
 - (void)fillIDTokenFromJSON:(NSDictionary *)json
@@ -403,71 +388,11 @@ static uint64_t s_expirationBuffer = 300;
     return dictionary;
 }
 
-- (void)fillAccessTokenFromTokenResponse:(MSIDTokenResponse *)response
-                                 request:(MSIDRequestParameters *)requestParams
-{
-    NSString *resource = nil;
-    
-    if ([response isKindOfClass:[MSIDAADV1TokenResponse class]])
-    {
-        NSString *fallbackResource = nil;
-        
-        if ([requestParams isKindOfClass:[MSIDAADV1RequestParameters class]])
-        {
-            MSIDAADV1RequestParameters *v1RequestParams = (MSIDAADV1RequestParameters *)requestParams;
-            fallbackResource = v1RequestParams.resource;
-        }
-        
-        MSIDAADV1TokenResponse *aadV1TokenResponse = (MSIDAADV1TokenResponse *)response;
-        // Because resource is not always returned in the token response, we rely on the input resource as a fallback
-        resource = aadV1TokenResponse.resource ? aadV1TokenResponse.resource : fallbackResource;
-    }
-    
-    _target = resource ? resource : response.scope;
-    
-    _accessToken = response.accessToken;
-    [self fillExpiryFromResponse:response];
-    [self fillExtendedExpiryFromResponse:response];
-}
-
-- (void)fillExpiryFromResponse:(MSIDTokenResponse *)response
-{
-    NSDate *expiresOn = response.expiryDate;
-    
-    if (!expiresOn)
-    {
-        MSID_LOG_WARN(nil, @"The server did not return the expiration time for the access token.");
-        expiresOn = [NSDate dateWithTimeIntervalSinceNow:3600.0]; //Assume 1hr expiration
-    }
-    
-    _expiresOn = [NSDate dateWithTimeIntervalSince1970:(uint64_t)[expiresOn timeIntervalSince1970]];
-    
-    _cachedAt = [NSDate dateWithTimeIntervalSince1970:(uint64_t)[[NSDate date] timeIntervalSince1970]];
-}
-
-- (void)fillExtendedExpiryFromResponse:(MSIDTokenResponse *)response
-{
-    if ([response isKindOfClass:[MSIDAADTokenResponse class]])
-    {
-        MSIDAADTokenResponse *aadTokenResponse = (MSIDAADTokenResponse *)response;
-        NSMutableDictionary *serverInfo = [_additionalInfo mutableCopy];
-        [serverInfo setValue:aadTokenResponse.extendedExpiresOnDate
-                      forKey:MSID_EXTENDED_EXPIRES_ON_LEGACY_CACHE_KEY];
-        _additionalInfo = serverInfo;
-    }
-}
-
 #pragma mark - ADFS tokens
 
 - (void)fillADFSTokenFromJSON:(NSDictionary *)json
 {
     _refreshToken = json[MSID_RESOURCE_RT_CACHE_KEY];
-}
-
-- (void)fillADFSTokenFromTokenResponse:(MSIDTokenResponse *)response
-                               request:(MSIDRequestParameters *)requestParams
-{
-    _refreshToken = response.refreshToken;
 }
 
 #pragma mark - Expiry
@@ -497,42 +422,71 @@ static uint64_t s_expirationBuffer = 300;
 
 #pragma mark - Init
 
-- (instancetype)initWithTokenResponse:(MSIDTokenResponse *)response
-                              request:(MSIDRequestParameters *)requestParams
-                            tokenType:(MSIDTokenType)tokenType
+- (instancetype)initWithAuthority:(NSURL *)authority
+                         clientId:(NSString *)clientId
+                     uniqueUserId:(NSString *)uniqueUserId
+                         username:(NSString *)username
+                       clientInfo:(MSIDClientInfo *)clientInfo
+                   additionalInfo:(NSDictionary *)additionalInfo
+                        tokenType:(MSIDTokenType)tokenType
 {
-    if (!(self = [super initWithTokenResponse:response request:requestParams]))
+    self = [super initWithAuthority:authority
+                           clientId:clientId
+                       uniqueUserId:uniqueUserId
+                           username:username
+                         clientInfo:clientInfo
+                     additionalInfo:additionalInfo];
+    
+    if (self)
     {
-        return nil;
-    }
-    
-    _tokenType = tokenType;
-    _idToken = response.idToken;
-    
-    switch (tokenType) {
-        case MSIDTokenTypeRefreshToken:
-        {
-            [self fillRefreshTokenFromTokenResponse:response request:requestParams];
-            break;
-        }
-        case MSIDTokenTypeAccessToken:
-        case MSIDTokenTypeLegacyADFSToken:
-        {
-            [self fillAccessTokenFromTokenResponse:response request:requestParams];
-            
-            if (tokenType == MSIDTokenTypeLegacyADFSToken)
-            {
-                [self fillADFSTokenFromTokenResponse:response request:requestParams];
-            }
-            
-            break;
-        }
-            
-        default:
-            break;
+        _tokenType = tokenType;
     }
     
     return self;
+}
+
+- (void)updateRefreshTokenWithToken:(NSString *)refreshToken
+                            idToken:(NSString *)idToken
+                           familyId:(NSString *)familyId
+{
+    _refreshToken = refreshToken;
+    _genericToken = refreshToken;
+    _idToken = idToken;
+    _familyId = familyId;
+}
+
+- (void)updateAccessTokenWithToken:(NSString *)accessToken
+                           idToken:(NSString *)idToken
+                         expiresOn:(NSDate *)expiresOn
+                          cachedAt:(NSDate *)cachedAt
+                      extExpiresOn:(NSDate *)extExpiresOnDate
+                            target:(NSString *)target
+{
+    _accessToken = accessToken;
+    _genericToken = accessToken;
+    _idToken = idToken;
+    _expiresOn = expiresOn;
+    _cachedAt = cachedAt;
+    _target = target;
+    
+    if (extExpiresOnDate)
+    {
+        NSMutableDictionary *additionalInfo = [_additionalInfo mutableCopy];
+        [additionalInfo setObject:extExpiresOnDate
+                           forKey:MSID_EXTENDED_EXPIRES_ON_LEGACY_CACHE_KEY];
+        _additionalInfo = additionalInfo;
+    }
+}
+
+- (void)updateIDTokenWithToken:(NSString *)idToken
+{
+    _idToken = idToken;
+    _genericToken = idToken;
+}
+
+- (void)updateADFSTokenWithRefreshToken:(NSString *)refreshToken
+{
+    _refreshToken = refreshToken;
 }
 
 @end

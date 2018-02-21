@@ -1,3 +1,5 @@
+//------------------------------------------------------------------------------
+//
 // Copyright (c) Microsoft Corporation.
 // All rights reserved.
 //
@@ -15,28 +17,33 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+//
+//------------------------------------------------------------------------------
 
-#import "MSIDTelemetryBaseEvent.h"
-#import "MSIDToken.h"
+#import <Foundation/Foundation.h>
+#import "MSIDTokenType.h"
+#import "MSIDAccount.h"
 
-@interface MSIDTelemetryCacheEvent : MSIDTelemetryBaseEvent
+@class MSIDTokenResponse;
+@class MSIDRequestParameters;
+@class MSIDToken;
+@class MSIDAccount;
 
-- (void)setTokenType:(MSIDTokenType)tokenType;
-- (void)setStatus:(NSString *)status;
-- (void)setIsRT:(NSString *)isRT;
-- (void)setIsMRRT:(NSString *)isMRRT;
-- (void)setIsFRT:(NSString *)isFRT;
-- (void)setRTStatus:(NSString *)status;
-- (void)setMRRTStatus:(NSString *)status;
-- (void)setFRTStatus:(NSString *)status;
-- (void)setSpeInfo:(NSString  *)speInfo;
-- (void)setToken:(MSIDToken *)token;
-- (void)setCacheWipeApp:(NSString *)wipeApp;
-- (void)setCacheWipeTime:(NSString *)wipeTime;
+@interface MSIDResponseCacheHandler : NSObject
+
+- (instancetype)initWithTokenResponse:(MSIDTokenResponse *)response
+                              request:(MSIDRequestParameters *)requestParams;
+
+- (MSIDToken *)refreshToken;
+- (MSIDToken *)accessToken;
+- (MSIDToken *)idToken;
+- (MSIDToken *)adfsToken;
+
+- (MSIDAccount *)account;
 
 @end
