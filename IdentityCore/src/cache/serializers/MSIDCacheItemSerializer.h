@@ -28,8 +28,7 @@
 
 @protocol MSIDCacheItemSerializer <NSObject>
 
-- (instancetype)initForTokenType:(MSIDTokenType)type;
-- (instancetype)initForAccounts;
+- (instancetype)initWithClassName:(Class)className;
 
 - (NSData *)serialize:(MSIDBaseCacheItem *)item;
 - (MSIDBaseCacheItem *)deserialize:(NSData *)data;

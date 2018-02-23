@@ -32,108 +32,11 @@
 #import "MSIDAADV2RequestParameters.h"
 #import "NSDictionary+MSIDTestUtil.h"
 
-@interface MSIDTokenIntegrationTests : XCTestCase
+@interface MSIDBaseTokenIntegrationTests : XCTestCase
 
 @end
 
-@implementation MSIDTokenIntegrationTests
-
-#pragma mark - Init
-
-- (void)testInitWithTokenResponse_whenOIDCTokenResponse_shouldFillToken
-{
-    MSIDTokenResponse *response = [MSIDTestTokenResponse defaultTokenResponseWithAT:DEFAULT_TEST_ACCESS_TOKEN
-                                                                                 RT:DEFAULT_TEST_REFRESH_TOKEN
-                                                                             scopes:[NSOrderedSet orderedSetWithObjects:DEFAULT_TEST_SCOPE, nil]
-                                                                           username:DEFAULT_TEST_ID_TOKEN_USERNAME
-                                                                            subject:DEFAULT_TEST_ID_TOKEN_SUBJECT];
-    
-    MSIDRequestParameters *params = [MSIDTestRequestParams defaultParams];
-    
-    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
-    
-    XCTAssertEqualObjects(token.authority, params.authority);
-    XCTAssertEqualObjects(token.clientId, params.clientId);
-    XCTAssertEqualObjects(token.uniqueUserId, DEFAULT_TEST_ID_TOKEN_SUBJECT);
-    XCTAssertNil(token.clientInfo);
-    XCTAssertEqualObjects(token.additionalInfo, [NSMutableDictionary dictionary]);
-}
-
-- (void)testInitWithTokenResponse_whenAADV1TokenResponse_v1RequestParams_shouldFillToken
-{
-    MSIDAADV1TokenResponse *response = [MSIDTestTokenResponse v1DefaultTokenResponse];
-    MSIDAADV1RequestParameters *params = [MSIDTestRequestParams v1DefaultParams];
-    
-    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
-    
-    XCTAssertEqualObjects(token.authority, params.authority);
-    XCTAssertEqualObjects(token.clientId, params.clientId);
-    
-    NSString *uniqueUserId = [NSString stringWithFormat:@"%@.%@", DEFAULT_TEST_UID, DEFAULT_TEST_UTID];
-    XCTAssertEqualObjects(token.uniqueUserId, uniqueUserId);
-    
-    NSString *clientInfoString = [@{ @"uid" : DEFAULT_TEST_UID, @"utid" : DEFAULT_TEST_UTID} msidBase64UrlJson];
-    
-    XCTAssertEqualObjects(token.clientInfo.rawClientInfo, clientInfoString);
-    XCTAssertEqualObjects(token.additionalInfo, [NSMutableDictionary dictionary]);
-}
-
-- (void)testInitWithTokenResponse_whenAADV1TokenResponse_v2RequestParams_shouldFillToken
-{
-    MSIDAADV1TokenResponse *response = [MSIDTestTokenResponse v1DefaultTokenResponse];
-    MSIDAADV2RequestParameters *params = [MSIDTestRequestParams v2DefaultParams];
-    
-    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
-    
-    XCTAssertEqualObjects(token.authority, params.authority);
-    XCTAssertEqualObjects(token.clientId, params.clientId);
-    
-    NSString *uniqueUserId = [NSString stringWithFormat:@"%@.%@", DEFAULT_TEST_UID, DEFAULT_TEST_UTID];
-    XCTAssertEqualObjects(token.uniqueUserId, uniqueUserId);
-    
-    NSString *clientInfoString = [@{ @"uid" : DEFAULT_TEST_UID, @"utid" : DEFAULT_TEST_UTID} msidBase64UrlJson];
-    
-    XCTAssertEqualObjects(token.clientInfo.rawClientInfo, clientInfoString);
-    XCTAssertEqualObjects(token.additionalInfo, [NSMutableDictionary dictionary]);
-}
-
-- (void)testInitWithTokenResponse_whenAADV2TokenResponse_v1RequestParams_shouldFillToken
-{
-    MSIDAADV2TokenResponse *response = [MSIDTestTokenResponse v2DefaultTokenResponse];
-    MSIDAADV1RequestParameters *params = [MSIDTestRequestParams v1DefaultParams];
-    
-    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
-    
-    XCTAssertEqualObjects(token.authority, params.authority);
-    XCTAssertEqualObjects(token.clientId, params.clientId);
-    
-    NSString *uniqueUserId = [NSString stringWithFormat:@"%@.%@", DEFAULT_TEST_UID, DEFAULT_TEST_UTID];
-    XCTAssertEqualObjects(token.uniqueUserId, uniqueUserId);
-    
-    NSString *clientInfoString = [@{ @"uid" : DEFAULT_TEST_UID, @"utid" : DEFAULT_TEST_UTID} msidBase64UrlJson];
-    
-    XCTAssertEqualObjects(token.clientInfo.rawClientInfo, clientInfoString);
-    XCTAssertEqualObjects(token.additionalInfo, [NSMutableDictionary dictionary]);
-}
-
-- (void)testInitWithTokenResponse_whenAADV2TokenResponse_v2RequestParams_shouldFillToken
-{
-    MSIDAADV2TokenResponse *response = [MSIDTestTokenResponse v2DefaultTokenResponse];
-    MSIDAADV2RequestParameters *params = [MSIDTestRequestParams v2DefaultParams];
-    
-    MSIDToken *token = [[MSIDToken alloc] initWithTokenResponse:response request:params];
-    
-    XCTAssertEqualObjects(token.authority, params.authority);
-    XCTAssertEqualObjects(token.clientId, params.clientId);
-    
-    NSString *uniqueUserId = [NSString stringWithFormat:@"%@.%@", DEFAULT_TEST_UID, DEFAULT_TEST_UTID];
-    XCTAssertEqualObjects(token.uniqueUserId, uniqueUserId);
-    
-    NSString *clientInfoString = [@{ @"uid" : DEFAULT_TEST_UID, @"utid" : DEFAULT_TEST_UTID} msidBase64UrlJson];
-    
-    XCTAssertEqualObjects(token.clientInfo.rawClientInfo, clientInfoString);
-    XCTAssertEqualObjects(token.additionalInfo, [NSMutableDictionary dictionary]);
-}
+@implementation MSIDBaseTokenIntegrationTests
 
 #pragma mark - Init with JSON
 

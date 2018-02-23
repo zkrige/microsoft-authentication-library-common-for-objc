@@ -40,9 +40,7 @@
 @interface MSIDDefaultTokenCacheAccessor()
 {
     id<MSIDTokenCacheDataSource> _dataSource;
-    MSIDJsonSerializer *_atSerializer;
-    MSIDJsonSerializer *_rtSerializer;
-    MSIDJsonSerializer *_idTokenSerializer;
+    MSIDJsonSerializer *_tokenSerializer;
     MSIDJsonSerializer *_accountSerializer;
 }
 @end
@@ -58,10 +56,9 @@
     if (self)
     {
         _dataSource = dataSource;
-        _atSerializer = [[MSIDJsonSerializer alloc] initForTokenType:MSIDTokenTypeAccessToken];
-        _rtSerializer = [[MSIDJsonSerializer alloc] initForTokenType:MSIDTokenTypeRefreshToken];
-        _idTokenSerializer = [[MSIDJsonSerializer alloc] initForTokenType:MSIDTokenTypeIDToken];
-        _accountSerializer = [[MSIDJsonSerializer alloc] initForAccounts];
+        
+        _tokenSerializer = [[MSIDJsonSerializer alloc] initWithClassName:MSIDToken.class];
+        _accountSerializer = [[MSIDJsonSerializer alloc] initWithClassName:MSIDAccount.class];
     }
     
     return self;
@@ -140,7 +137,7 @@
                   clientId:token.clientId
                     scopes:token.scopes
                  authority:token.authority
-                serializer:_atSerializer
+                serializer:_tokenSerializer
                    context:context
                      error:error];
 }
@@ -162,7 +159,7 @@
                   clientId:token.clientId
                     scopes:nil
                  authority:token.authority
-                serializer:_idTokenSerializer
+                serializer:_tokenSerializer
                    context:context
                      error:error];
 }
@@ -265,7 +262,7 @@
                   clientId:refreshToken.clientId
                     scopes:nil
                  authority:newAuthority
-                serializer:_rtSerializer
+                serializer:_tokenSerializer
                    context:context
                      error:error];
 }
@@ -283,7 +280,7 @@
     return [self getRefreshTokenForUserId:account.userIdentifier
                                  clientId:parameters.clientId
                                 authority:parameters.authority
-                               serializer:_rtSerializer
+                               serializer:_tokenSerializer
                                   context:context
                                     error:error];
 }
@@ -301,7 +298,7 @@
     return [self getRefreshTokenForUserId:account.userIdentifier
                                  clientId:token.clientId
                                 authority:token.authority
-                               serializer:_rtSerializer
+                               serializer:_tokenSerializer
                                   context:context
                                     error:error];
 }
@@ -311,7 +308,10 @@
                                                        error:(NSError **)error
 {
     MSIDTokenCacheKey *key = [MSIDTokenCacheKey keyForRefreshTokenWithClientId:clientId];
-    return (NSArray<MSIDToken *> *)[self getAllTokensWithKey:key serializer:_rtSerializer context:context error:error];
+    return (NSArray<MSIDToken *> *)[self getAllTokensWithKey:key
+                                                  serializer:_tokenSerializer
+                                                     context:context
+                                                       error:error];
 }
 
 
@@ -595,7 +595,10 @@
     MSIDTokenCacheKey *key = [MSIDTokenCacheKey keyForAllAccessTokensWithUniqueUserId:account.userIdentifier
                                                                             authority:authority
                                                                              clientId:clientId];
-    return (NSArray<MSIDToken *> *)[self getAllTokensWithKey:key serializer:_atSerializer context:context error:error];
+    return (NSArray<MSIDToken *> *)[self getAllTokensWithKey:key
+                                                  serializer:_tokenSerializer
+                                                     context:context
+                                                       error:error];
 }
 
 
@@ -603,7 +606,10 @@
                                               error:(NSError *__autoreleasing *)error
 {
     MSIDTokenCacheKey *key = [MSIDTokenCacheKey keyForAllAccessTokens];
-    return (NSArray<MSIDToken *> *)[self getAllTokensWithKey:key serializer:_atSerializer context:context error:error];
+    return (NSArray<MSIDToken *> *)[self getAllTokensWithKey:key
+                                                  serializer:_tokenSerializer
+                                                     context:context
+                                                       error:error];
 }
 
 - (NSArray<MSIDToken *> *)getAllTokensWithKey:(MSIDTokenCacheKey *)key

@@ -39,45 +39,20 @@
 
 #pragma mark - Init
 
-- (instancetype)initForTokenType:(MSIDTokenType)type
+#pragma mark - Init
+
+- (instancetype)initWithClassName:(Class)className
 {
     self = [super init];
     
     if (self)
     {
-        _classToSerialize = MSIDToken.class;
-        
-        switch (type) {
-            case MSIDTokenTypeAccessToken:
-                _classToSerialize = MSIDToken.class;
-                break;
-                
-            case MSIDTokenTypeRefreshToken:
-                _classToSerialize = MSIDToken.class;
-                break;
-                
-            case MSIDTokenTypeLegacyADFSToken:
-                _classToSerialize = MSIDToken.class;
-                break;
-                
-            default:
-                break;
-        }
+        _classToSerialize = className;
     }
     return self;
 }
 
-- (instancetype)initForAccounts
-{
-    self = [super init];
-    
-    if (self)
-    {
-        _classToSerialize = MSIDAccount.class;
-    }
-    
-    return self;
-}
+#pragma mark - Serialize
 
 - (NSData *)serialize:(MSIDBaseCacheItem *)item
 {

@@ -68,6 +68,7 @@
 
 - (void)fillDefaultProperties
 {
+    // TODO: fix this
     _authority = _params.authority;
     _clientId = _params.clientId;
     
@@ -93,7 +94,36 @@
 
 - (MSIDAccount *)account
 {
-    return nil;
+    MSIDAccount *account = [[MSIDAccount alloc] initWithAuthority:_authority
+                                                         clientId:_clientId
+                                                     uniqueUserId:_uniqueUserId
+                                                         username:_username
+                                                       clientInfo:_clientInfo
+                                                   additionalInfo:_additionalInfo];
+    
+    NSString *uid = nil;
+    NSString *utid = nil;
+    
+    if ([_tokenResponse isKindOfClass:[MSIDAADTokenResponse class]])
+    {
+        MSIDAADTokenResponse *aadTokenResponse = (MSIDAADTokenResponse *)_tokenResponse;
+        uid = aadTokenResponse.clientInfo.uid;
+        utid = aadTokenResponse.clientInfo.utid;
+    }
+    else
+    {
+        uid = _tokenResponse.idTokenObj.subject;
+        utid = @"";
+    }
+    
+    NSString *userId = _tokenResponse.idTokenObj.userId;
+    
+    // TODO: make all other fields writable in token too?
+    account.legacyUserId = userId;
+    account.utid = utid;
+    account.uid = uid;
+    
+    return account;
 }
 
 #pragma mark - Helpers

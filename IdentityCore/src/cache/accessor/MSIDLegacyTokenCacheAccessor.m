@@ -37,10 +37,7 @@
 @interface MSIDLegacyTokenCacheAccessor()
 {
     id<MSIDTokenCacheDataSource> _dataSource;
-    
-    MSIDKeyedArchiverSerializer *_atSerializer;
-    MSIDKeyedArchiverSerializer *_rtSerializer;
-    MSIDKeyedArchiverSerializer *_adfsSerializer;
+    MSIDKeyedArchiverSerializer *_tokenSerializer;
 }
 
 @end
@@ -56,10 +53,7 @@
     if (self)
     {
         _dataSource = dataSource;
-
-        _atSerializer = [[MSIDKeyedArchiverSerializer alloc] initForTokenType:MSIDTokenTypeAccessToken];
-        _rtSerializer = [[MSIDKeyedArchiverSerializer alloc] initForTokenType:MSIDTokenTypeRefreshToken];
-        _adfsSerializer = [[MSIDKeyedArchiverSerializer alloc] initForTokenType:MSIDTokenTypeLegacyADFSToken];
+        _tokenSerializer = [[MSIDKeyedArchiverSerializer alloc] initWithClassName:MSIDToken.class];
     }
     
     return self;
@@ -116,7 +110,7 @@
     return [self saveToken:token
                    account:account
                   clientId:parameters.clientId
-                serializer:_atSerializer
+                serializer:_tokenSerializer
                    context:context
                      error:error];
 }
@@ -133,7 +127,7 @@
     
     return [self getATForAccount:account
                    requestParams:parameters
-                      serializer:_atSerializer
+                      serializer:_tokenSerializer
                          context:context
                            error:error];
 }
@@ -155,7 +149,7 @@
     return [self saveToken:token
                    account:account
                   clientId:parameters.clientId
-                serializer:_adfsSerializer
+                serializer:_tokenSerializer
                    context:context
                      error:error];
 }
@@ -167,7 +161,7 @@
     MSIDAccount *account = [[MSIDAccount alloc] initWithUpn:@"" utid:nil uid:nil];
     return (MSIDToken *)[self getATForAccount:account
                                     requestParams:parameters
-                                       serializer:_adfsSerializer
+                                       serializer:_tokenSerializer
                                           context:context
                                             error:error];
 }
@@ -188,7 +182,7 @@
     return [self saveToken:refreshToken
                    account:account
                   clientId:refreshToken.clientId
-                serializer:_rtSerializer
+                serializer:_tokenSerializer
                    context:context
                      error:error];
 }
@@ -202,7 +196,7 @@
                                              authority:parameters.authority
                                               clientId:parameters.clientId
                                               resource:nil
-                                            serializer:_rtSerializer
+                                            serializer:_tokenSerializer
                                                context:context
                                                  error:error];
 }
@@ -221,7 +215,7 @@
                                              authority:token.authority
                                               clientId:token.clientId
                                               resource:token.resource
-                                            serializer:_rtSerializer
+                                            serializer:_tokenSerializer
                                                context:context
                                                  error:error];
 }
@@ -237,7 +231,7 @@
                                                                            context:context];
     
     NSArray *legacyTokens = [_dataSource itemsWithKey:[MSIDTokenCacheKey keyForAllItems]
-                                           serializer:_rtSerializer
+                                           serializer:_tokenSerializer
                                               context:context
                                                 error:error];
     
